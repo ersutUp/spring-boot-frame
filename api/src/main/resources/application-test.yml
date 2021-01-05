@@ -1,0 +1,30 @@
+prefix: java_frame
+jdbc:
+  host: xxxxxx:3306
+  database: db
+  user: user
+  pass: password
+redis:
+  host: 192.168.1.253
+  port: 6379
+project:
+  name: java_frame
+  #日期格式
+  date-format: yyyy-MM-dd
+  time-format: HH:mm:ss
+  legal:
+    #通过referral
+    referrer: 127.0.0.1
+  file:
+    #文件上传目录
+    root: D:\code\boot
+  #Tomcat启动端口
+  prot: 8088
+log:
+  #日志等级
+  level: INFO
+  #日志目录 优先读取环境变量 默认值是 ./logs
+  path: ${LOG_PATH:./logs}
+  logStash:
+    ip: 127.0.0.1
+    port: 4560
