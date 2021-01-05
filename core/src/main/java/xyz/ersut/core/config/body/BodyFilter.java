@@ -1,16 +1,14 @@
-package xyz.ersut.core.config.body;
+package com.zhiheiot.core.config.body;
 
+import com.zhiheiot.core.config.body.request.RequestWrapper;
+import com.zhiheiot.core.config.body.response.ResponseBodyWrapper;
 import org.springframework.context.annotation.DependsOn;
-import xyz.ersut.core.config.body.request.RequestWrapper;
-import xyz.ersut.core.config.body.response.ResponseBodyWrapper;
-import xyz.ersut.core.constans.ConfigConstans;
-import xyz.ersut.core.log.FieldLog;
-import xyz.ersut.core.result.ResultJson;
-import xyz.ersut.core.util.ProjectUtil;
-import xyz.ersut.core.util.json.JsonUtil;
-import xyz.ersut.core.util.verify.StringUtils;
-import xyz.ersut.core.util.web.WebUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zhiheiot.core.log.FieldLog;
+import com.zhiheiot.core.result.ResultJson;
+import com.zhiheiot.core.util.ProjectUtil;
+import com.zhiheiot.core.util.json.JsonUtil;
+import com.zhiheiot.core.util.verify.StringUtils;
+import com.zhiheiot.core.util.web.WebUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -53,6 +51,8 @@ public class BodyFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         RequestWrapper myRequestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
+        //获取响应体
+        ResponseBodyWrapper myResponseBodyWrapper = new ResponseBodyWrapper((HttpServletResponse)servletResponse);
 
         String reqID = UUID.randomUUID().toString();
         ((HttpServletResponse)servletResponse).setHeader("X-Request-Id",reqID);
@@ -71,28 +71,27 @@ public class BodyFilter implements Filter {
                 .field("reqBody",requestBody)
                 .info("reqest start");
 
-        filterChain.doFilter(myRequestWrapper, servletResponse);
+        filterChain.doFilter(myRequestWrapper, myResponseBodyWrapper);
 
         int responseCode = 0;
         String responseMessage = "";
         String contentType = servletResponse.getContentType();
+        //获取响应数据
+        String responseBody = new String(myResponseBodyWrapper.getResponseData());
+        //这三行是必须的！！！！获取原本的ResponseBodyWrapper包装的 response ，将响应数据放入
+        OutputStream out = servletResponse.getOutputStream();
+        out.write(responseBody.getBytes());
+        out.flush();
 
         //如果是响应体是 json 格式
         if(StringUtils.isNotBlank(contentType)
                 && contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            //获取响应体
-            ResponseBodyWrapper myResponseBodyWrapper = new ResponseBodyWrapper((HttpServletResponse)servletResponse);
-            //获取响应数据
-            String responseBody = new String(myResponseBodyWrapper.getResponseData());
+            ResultJson resultJson = JsonUtil.json2Object(responseBody, ResultJson.class);
+            if(resultJson != null){
+                responseCode = resultJson.code;
+                responseMessage = resultJson.message;
+            }
 
-            ResultJson resultJson = JsonUtil.json2Object(requestBody, ResultJson.class);
-            responseCode = resultJson.code;
-            responseMessage = resultJson.message;
-
-            //这三行是必须的！！！！获取原本的ResponseBodyWrapper包装的 response ，将响应数据放入
-            OutputStream out = servletResponse.getOutputStream();
-            out.write(responseBody.getBytes());
-            out.flush();
         }
 
         //计算请求时间
