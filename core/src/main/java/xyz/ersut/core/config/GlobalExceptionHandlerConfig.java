@@ -1,15 +1,13 @@
-package xyz.ersut.core.config;
+package com.zhiheiot.core.config;
 
-import xyz.ersut.core.config.body.BodyFilter;
-import xyz.ersut.core.constans.ConfigConstans;
-import xyz.ersut.core.exception.code.CodeException;
+import com.zhiheiot.core.config.body.BodyFilter;
+import com.zhiheiot.core.exception.code.CodeException;
+import com.zhiheiot.core.log.FieldLog;
+import com.zhiheiot.core.result.ResultJson;
+import com.zhiheiot.core.result.code.ResultSystemCode;
+import com.zhiheiot.core.result.code.Resultcode;
+import com.zhiheiot.core.util.ProjectUtil;
 
-import xyz.ersut.core.log.FieldLog;
-import xyz.ersut.core.result.ResultJson;
-import xyz.ersut.core.result.code.ResultSystemCode;
-import xyz.ersut.core.result.code.Resultcode;
-import xyz.ersut.core.util.ProjectUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -95,7 +93,7 @@ public class GlobalExceptionHandlerConfig {
      */
     @ExceptionHandler(value = {Exception.class})
     public Object defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, Exception e) {
-        log.field("errMsg",e.getMessage()).debug("system error");
+        log.error("system error",e);
         return new ResultJson(ResultSystemCode.ERROR);
     }
 
