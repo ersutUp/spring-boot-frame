@@ -104,8 +104,8 @@ public class BodyFilter implements Filter {
         //打印日志
         Map<String,Object> resultLog = new HashMap<>();
         resultLog.put("resMS",elapsedTime);
-        resultLog.put("code",responseCode);
-        resultLog.put("msg",responseMessage);
+        resultLog.put("resCode",responseCode);
+        resultLog.put("resMsg",responseMessage);
         resultLog.put("status",((HttpServletResponse) servletResponse).getStatus());
         if(elapsedTime > timeOut){
             log.fieldAll(resultLog).warn("request end but tiomout");
