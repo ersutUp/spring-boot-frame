@@ -1,14 +1,14 @@
-package com.zhiheiot.core.config.body;
+package xyz.ersut.core.config.body;
 
-import com.zhiheiot.core.config.body.request.RequestWrapper;
-import com.zhiheiot.core.config.body.response.ResponseBodyWrapper;
+import xyz.ersut.core.config.body.request.RequestWrapper;
+import xyz.ersut.core.config.body.response.ResponseBodyWrapper;
 import org.springframework.context.annotation.DependsOn;
-import com.zhiheiot.core.log.FieldLog;
-import com.zhiheiot.core.result.ResultJson;
-import com.zhiheiot.core.util.ProjectUtil;
-import com.zhiheiot.core.util.json.JsonUtil;
-import com.zhiheiot.core.util.verify.StringUtils;
-import com.zhiheiot.core.util.web.WebUtils;
+import xyz.ersut.core.log.FieldLog;
+import xyz.ersut.core.result.ResultJson;
+import xyz.ersut.core.util.ProjectUtil;
+import xyz.ersut.core.util.json.JsonUtil;
+import xyz.ersut.core.util.verify.StringUtils;
+import xyz.ersut.core.util.web.WebUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
