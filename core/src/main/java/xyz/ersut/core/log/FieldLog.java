@@ -91,7 +91,7 @@ public class FieldLog {
 
     //error日志打印
     public void error(String msg,Throwable e){
-        if (log.isDebugEnabled()) {
+        if (log.isErrorEnabled()) {
             fieldData.put("msg", msg);
             log.error(field2String(), e);
         }
