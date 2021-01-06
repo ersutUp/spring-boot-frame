@@ -110,9 +110,8 @@ public class BodyFilter implements Filter {
         if(elapsedTime > timeOut){
             log.fieldAll(resultLog).warn("request end but tiomout");
         } else {
-            log.fieldAll(resultLog).info("request end but tiomout");
+            log.fieldAll(resultLog).info("request end");
         }
-
     }
 
     @Override
