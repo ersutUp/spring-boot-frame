@@ -31,8 +31,7 @@ import java.util.List;
  * 1、时效性验证（上下60秒）
  * 2、referrer的验证
  * 3、token的验证
- * */
-public class ApiVerifyInterceptor extends HandlerInterceptorAdapter {
+ * */public class ApiVerifyInterceptor extends HandlerInterceptorAdapter {
     private FieldLog log;
     //超时时间
     private static final int TIMEOUT = 60000;
@@ -72,11 +71,21 @@ public class ApiVerifyInterceptor extends HandlerInterceptorAdapter {
         //传来的时间戳(世界协调时间)
         long timestampInt = new Long(timestamp);
 
+        /*
+         js获取世界协调时间：
+            var getUTCTime = function() {
+                var d = new Date();
+                var len = d.getTime();
+                var offset = d.getTimezoneOffset() * 60000;
+                var utcTime = len + offset;
+                return utcTime;
+            }
+         */
         //时间偏移量
         Calendar cal = Calendar.getInstance();
         int offset = cal.get(Calendar.ZONE_OFFSET);
         //服务端时间戳计算后为世界协调时间
-        long nowTime = System.currentTimeMillis()+offset;
+        long nowTime = System.currentTimeMillis()-offset;
 
         //时间戳验证
         if( Math.abs(nowTime - timestampInt) > ApiVerifyInterceptor.TIMEOUT){
@@ -97,7 +106,7 @@ public class ApiVerifyInterceptor extends HandlerInterceptorAdapter {
             List<String> legalReferrerList = Arrays.asList(this.legalReferrer);
             //请求的 referrer 不存在系统的配置中 则返回非法请求
             if (ObjectUtils.isNotNull(legalReferrerList)) {
-                boolean isLegal = legalReferrerList.contains(legalReferrerList);
+                boolean isLegal = legalReferrerList.contains(referrer.replaceAll("^(http://|https://)","").replaceAll("/",""));
                 if(!isLegal){
                     this.resultIllegal(response);
                     return false;
